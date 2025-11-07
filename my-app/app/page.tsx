@@ -79,76 +79,76 @@ module.exports = {
  * @param {object|null} responseSchema - Optional JSON schema for structured output.
  * @returns {Promise<{data: any, error: string|null}>} - The result of the API call.
  */
-const callGeminiApi = async (userPrompt, systemInstruction, responseSchema = null) => {
-    const apiKey = ""; // Leave as-is, Canvas will provide it in runtime
-    const apiUrl = `https://generativelen.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+// const callGeminiApi = async (userPrompt, systemInstruction, responseSchema = null) => {
+//     const apiKey = ""; // Leave as-is, Canvas will provide it in runtime
+//     const apiUrl = `https://generativelen.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
-    const payload = {
-        contents: [{ parts: [{ text: userPrompt }] }],
-        systemInstruction: {
-            parts: [{ text: systemInstruction }]
-        },
-        generationConfig: {}
-    };
+//     const payload = {
+//         contents: [{ parts: [{ text: userPrompt }] }],
+//         systemInstruction: {
+//             parts: [{ text: systemInstruction }]
+//         },
+//         generationConfig: {}
+//     };
 
-    if (responseSchema) {
-        payload.generationConfig.responseMimeType = "application/json";
-        payload.generationConfig.responseSchema = responseSchema;
-    }
+//     if (responseSchema) {
+//         payload.generationConfig.responseMimeType = "application/json";
+//         payload.generationConfig.responseSchema = responseSchema;
+//     }
 
-    let retries = 5;
-    let delay = 1000;
+//     let retries = 5;
+//     let delay = 1000;
 
-    while (retries > 0) {
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+//     while (retries > 0) {
+//         try {
+//             const response = await fetch(apiUrl, {
+//                 method: 'POST',
+//                 headers: { 'Content-Type': 'application/json' },
+//                 body: JSON.stringify(payload)
+//             });
 
-            if (!response.ok) {
-                // Only retry on 429 (Too Many Requests) or 5xx server errors
-                if (response.status === 429 || response.status >= 500) {
-                    throw new Error(`Retryable error: ${response.status}`);
-                } else {
-                    // Non-retryable error
-                    return { data: null, error: `API Error: ${response.status} ${response.statusText}` };
-                }
-            }
+//             if (!response.ok) {
+//                 // Only retry on 429 (Too Many Requests) or 5xx server errors
+//                 if (response.status === 429 || response.status >= 500) {
+//                     throw new Error(`Retryable error: ${response.status}`);
+//                 } else {
+//                     // Non-retryable error
+//                     return { data: null, error: `API Error: ${response.status} ${response.statusText}` };
+//                 }
+//             }
 
-            const result = await response.json();
-            const candidate = result.candidates?.[0];
+//             const result = await response.json();
+//             const candidate = result.candidates?.[0];
 
-            if (candidate && candidate.content?.parts?.[0]?.text) {
-                if (responseSchema) {
-                    try {
-                        // Parse the JSON string from the API response
-                        const parsedJson = JSON.parse(candidate.content.parts[0].text);
-                        return { data: parsedJson, error: null };
-                    } catch (e) {
-                        return { data: null, error: "Failed to parse API JSON response." };
-                    }
-                } else {
-                    // Handle plain text response
-                    return { data: candidate.content.parts[0].text, error: null };
-                }
-            } else {
-                 return { data: null, error: "No content received from API." };
-            }
+//             if (candidate && candidate.content?.parts?.[0]?.text) {
+//                 if (responseSchema) {
+//                     try {
+//                         // Parse the JSON string from the API response
+//                         const parsedJson = JSON.parse(candidate.content.parts[0].text);
+//                         return { data: parsedJson, error: null };
+//                     } catch (e) {
+//                         return { data: null, error: "Failed to parse API JSON response." };
+//                     }
+//                 } else {
+//                     // Handle plain text response
+//                     return { data: candidate.content.parts[0].text, error: null };
+//                 }
+//             } else {
+//                  return { data: null, error: "No content received from API." };
+//             }
 
-        } catch (error) {
-            retries--;
-            if (retries === 0) {
-                return { data: null, error: `Failed to fetch after multiple retries: ${error.message}` };
-            }
-            // Don't log retries to console
-            await new Promise(resolve => setTimeout(resolve, delay));
-            delay *= 2; // Exponential backoff
-        }
-    }
-    return { data: null, error: "Operation failed after all retries." }; // Should be unreachable
-};
+//         } catch (error) {
+//             retries--;
+//             if (retries === 0) {
+//                 return { data: null, error: `Failed to fetch after multiple retries: ${error.message}` };
+//             }
+//             // Don't log retries to console
+//             await new Promise(resolve => setTimeout(resolve, delay));
+//             delay *= 2; // Exponential backoff
+//         }
+//     }
+//     return { data: null, error: "Operation failed after all retries." }; // Should be unreachable
+// };
 
 
 // =============================================================================
