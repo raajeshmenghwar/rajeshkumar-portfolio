@@ -72,14 +72,14 @@ module.exports = {
 // =============================================================================
 // GEMINI API CALLER FUNCTION (NEW)
 // =============================================================================
-/**
- * Calls the Gemini API with exponential backoff for retries.
- * @param {string} userPrompt - The user's prompt.
- * @param {string} systemInstruction - The system prompt to guide the model.
- * @param {object|null} responseSchema - Optional JSON schema for structured output.
- * @returns {Promise<{data: any, error: string|null}>} - The result of the API call.
- */
-// const callGeminiApi = async (userPrompt, systemInstruction, responseSchema = null) => {
+// /**
+//  * Calls the Gemini API with exponential backoff for retries.
+//  * @param {string} userPrompt - The user's prompt.
+//  * @param {string} systemInstruction - The system prompt to guide the model.
+//  * @param {object|null} responseSchema - Optional JSON schema for structured output.
+//  * @returns {Promise<{data: any, error: string|null}>} - The result of the API call.
+//  */
+// // const callGeminiApi = async (userPrompt, systemInstruction, responseSchema = null) => {
 //     const apiKey = ""; // Leave as-is, Canvas will provide it in runtime
 //     const apiUrl = `https://generativelen.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
