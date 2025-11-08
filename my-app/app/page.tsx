@@ -69,8 +69,6 @@ module.exports = {
 }
 */
 
-
-
 // =============================================================================
 // NAVIGATION COMPONENT
 // =============================================================================
@@ -242,7 +240,7 @@ const About = () => {
                             src="/images/profile-picture.png"
                             alt="Rajesh Kumar Headshot"
                             className="w-64 h-64 rounded-full object-cover shadow-lg border-4 border-teal mb-8"
-                            onError={(e) => { e.target.src = 'https://placehold.co/300x300/00ADB5/1C1C1E?text=Rajesh+K.'; }}
+                            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { (e.target as HTMLImageElement).src = 'https://placehold.co/300x300/00ADB5/1C1C1E?text=Rajesh+K.'; }}
                         />
                     </div>
 
@@ -268,7 +266,7 @@ const About = () => {
                                         src={badge.img} 
                                         alt={badge.name} 
                                         className="w-24 h-24 rounded-lg object-cover shadow-lg"
-                                        onError={(e) => { e.target.src = `https://placehold.co/150x150/EEEEEE/1C1C1E?text=${badge.name.split(' ').join('+')}`; }}
+                                        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { (e.target as HTMLImageElement).src = `https://placehold.co/150x150/EEEEEE/1C1C1E?text=${badge.name.split(' ').join('+')}`; }}
                                     />
                                 </a>
                             ))}
@@ -283,7 +281,7 @@ const About = () => {
 // =============================================================================
 // SKILLS SECTION COMPONENT
 // =============================================================================
-const SkillCard = ({ icon, title, description }) => (
+const SkillCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
     <div className="bg-charcoal-light p-6 rounded-lg shadow-lg border border-gray-700/50 transform hover:border-teal hover:-translate-y-2 transition-all duration-300">
         <div className="flex items-center gap-4 mb-4">
             <div className="bg-teal/10 p-3 rounded-full">
@@ -406,7 +404,7 @@ const Experience = () => {
                                             src={exp.logo} 
                                             alt={`${exp.company} Logo`} 
                                             className="w-16 h-16 rounded-lg object-cover shadow-md"
-                                            onError={(e) => { e.target.src = 'https://placehold.co/100x100/EEEEEE/1C1C1E?text=Logo'; }}
+                                            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { (e.target as HTMLImageElement).src = 'https://placehold.co/100x100/EEEEEE/1C1C1E?text=Logo'; }}
                                         />
                                         <div>
                                             <h3 className="text-xl font-bold text-teal">{exp.role}</h3>
@@ -489,8 +487,18 @@ const Education = () => {
 // PROJECTS SECTION COMPONENT
 // =============================================================================
 
+// --- Define Project Type ---
+// We create an interface for our project objects to make TypeScript happy
+interface Project {
+    title: string;
+    blurb: string;
+    github: string;
+    tools: string[];
+    imageUrl: string;
+}
+
 // --- Data for the Projects section ---
-const projectData = [
+const projectData: Project[] = [
     {
         title: 'PrivacyLens — Final Year Project',
         blurb: 'Built PrivacyLens, a mobile app that extracts & summarizes privacy policies for user data transparency. Automated policy collection from Google Play Store and applied Azure OpenAI models to generate clear, concise summaries.',
@@ -515,7 +523,14 @@ const projectData = [
 ];
 
 // --- ProjectModal Component (Fixes from before) ---
-const ProjectModal = ({ isModalOpen, project, onClose }) => {
+// Define props type for ProjectModal
+interface ProjectModalProps {
+    isModalOpen: boolean;
+    project: Project | null;
+    onClose: () => void;
+}
+
+const ProjectModal = ({ isModalOpen, project, onClose }: ProjectModalProps) => {
     'use client';
     
     const [currentProject, setCurrentProject] = useState(project);
@@ -543,7 +558,7 @@ const ProjectModal = ({ isModalOpen, project, onClose }) => {
         return null;
     }
 
-    const handleContentClick = (e) => {
+    const handleContentClick = (e: React.MouseEvent) => {
         e.stopPropagation();
     };
 
@@ -592,10 +607,16 @@ const ProjectModal = ({ isModalOpen, project, onClose }) => {
     );
 };
 
+// --- Define props type for Projects component ---
+interface ProjectsProps {
+    setSelectedProject: (project: Project | null) => void;
+    setIsModalOpen: (isOpen: boolean) => void;
+}
+
 // --- Projects Component ---
-const Projects = ({ setSelectedProject, setIsModalOpen }) => {
+const Projects = ({ setSelectedProject, setIsModalOpen }: ProjectsProps) => {
   'use client';
-  const handleOpenModal = (project) => {
+  const handleOpenModal = (project: Project) => {
     setSelectedProject(project);
     setIsModalOpen(true);
   };
@@ -604,7 +625,7 @@ const Projects = ({ setSelectedProject, setIsModalOpen }) => {
     <section id="projects" className="bg-charcoal py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-bold text-center text-primary-text mb-4">
-            Home Lab Projects — Learning by Building
+            Projects - Learning by Building
         </h2>
         <div className="w-20 h-1 bg-teal mx-auto mb-16"></div>
 
@@ -616,7 +637,7 @@ const Projects = ({ setSelectedProject, setIsModalOpen }) => {
                 src={project.imageUrl} 
                 alt={project.title}
                 className="w-full h-48 object-cover"
-                onError={(e) => { e.target.src = 'https://placehold.co/600x300/00ADB5/1C1C1E?text=Image+Not+Found'; }}
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { (e.target as HTMLImageElement).src = 'https://placehold.co/600x300/00ADB5/1C1C1E?text=Image+Not+Found'; }}
               />
               
               <div className="p-6 flex-1 flex flex-col">
@@ -658,7 +679,7 @@ const Projects = ({ setSelectedProject, setIsModalOpen }) => {
 // =============================================================================
 // BLOGS SECTION COMPONENT (Restored)
 // =============================================================================
-const BlogCard = ({ title, excerpt, link, imageUrl }) => (
+const BlogCard = ({ title, excerpt, link, imageUrl }: { title: string, excerpt: string, link: string, imageUrl: string }) => (
     <a
         href={link}
         target="_blank"
@@ -670,7 +691,7 @@ const BlogCard = ({ title, excerpt, link, imageUrl }) => (
             src={imageUrl} 
             alt="Blog post thumbnail" 
             className="w-full h-48 object-cover"
-            onError={(e) => { e.target.src = 'https://placehold.co/400x200/00ADB5/1C1C1E?text=Blog+Image'; }}
+            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { (e.target as HTMLImageElement).src = 'https://placehold.co/400x200/00ADB5/1C1C1E?text=Blog+Image'; }}
         />
         <div className="p-6">
             <h3 className="text-xl font-bold text-primary-text mb-3 group-hover:text-teal transition-colors duration-300 h-14 overflow-hidden">{title}</h3>
@@ -733,14 +754,14 @@ const BlogList = () => {
 // =============================================================================
 // TESTIMONIALS SECTION COMPONENT
 // =============================================================================
-const TestimonialCard = ({ name, title, quote, avatar }) => (
+const TestimonialCard = ({ name, title, quote, avatar }: { name: string, title: string, quote: string, avatar: string }) => (
     <div className="bg-charcoal-light p-6 rounded-lg shadow-lg border border-gray-700/50 h-full flex flex-col">
         <div className="flex items-center mb-4">
             <img 
                 src={avatar} 
                 alt={name} 
                 className="w-16 h-16 rounded-full object-cover border-2 border-teal mr-4"
-                onError={(e) => { e.target.src = `https://placehold.co/100x100/EEEEEE/1C1C1E?text=${name.split(' ').map(n => n[0]).join('')}`; }}
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => { (e.target as HTMLImageElement).src = `https://placehold.co/100x100/EEEEEE/1C1C1E?text=${name.split(' ').map(n => n[0]).join('')}`; }}
             />
             <div>
                 <h4 className="text-lg font-bold text-primary-text">{name}</h4>
@@ -843,7 +864,7 @@ const LetsConnect = () => {
                                 src={social.iconUrl} 
                                 alt={`${social.name} logo`} 
                                 className="w-20 h-20 object-contain"
-                                onError={(e) => { e.target.style.display = 'none'; }}
+                                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                             />
                         </a>
                     ))}
@@ -852,60 +873,6 @@ const LetsConnect = () => {
         </section>
     );
 };
-
-// const LetsConnect = () => {
-//     'use client'; 
-
-//     const socialLinks = [
-//         { name: 'Email', href: 'mailto:raajeshmenghwar@gmail.com', iconUrl: '/images/social/mail.png' },
-//         { name: 'LinkedIn', href: 'https://www.linkedin.com/in/raajeshmenghwar/', iconUrl: '/images/social/linkedin.png' },
-//         { name: 'GitHub', href: 'https://github.com/raajeshmenghwar', iconUrl: '/images/social/github.png' },
-//         { name: 'Medium', href: 'https://rajeshmenghwar.medium.com/', iconUrl: '/images/social/medium.png' },
-//         { name: 'Twitter', href: 'https://twitter.com/raajeshmenghwar', iconUrl: '/images/social/twitter.png' },
-//         { name: 'YouTube', href: 'https://www.youtube.com/@rajeshmenghwaar', iconUrl: '/images/social/youtube.png' },
-//         { name: 'Facebook', href: 'https://www.facebook.com/raajeshmenghwaar', iconUrl: '/images/social/facebook.png' },
-//         { name: 'Instagram', href: 'https://www.instagram.com/raajeshmenghwar/', iconUrl: '/images/social/instagram.png' },
-        
-//     ];
-    
-//     return (
-//         <section id="contact" className="bg-charcoal-dark py-24">
-//             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//                 <h2 className="text-4xl font-bold text-center text-primary-text mb-4">
-//                     Let's Connect
-//                 </h2>
-//                 <p className="text-2xl text-center text-subtext mb-12">
-//                     Explore My World
-//                 </p>
-//                 <div className="w-full h-px bg-gray-700/50 mx-auto mb-16"></div>
-                
-//                 <div className="flex flex-wrap justify-center gap-6">
-//                     {socialLinks.map((social) => (
-//                         <a
-//                             key={social.name}
-//                             href={social.href}
-//                             target="_blank"
-//                             rel="noopener noreferrer"
-//                             title={social.name}
-//                             className="bg-charcoal-light p-4 rounded-full text-subtext hover:text-teal hover:shadow-lg transform hover:scale-110 transition-all duration-300"
-//                         >
-//                             <span className="sr-only">{social.name}</span>
-//                             <img 
-//                                 src={social.iconUrl} 
-//                                 alt={`${social.name} logo`} 
-//                                 className="w-12 h-12 object-contain" 
-//                                 // You can add an invert class if your icons are black
-//                                 // className="w-12 h-12 object-contain invert" 
-//                                 onError={(e) => { e.target.style.display = 'none'; }} // Hide if image breaks
-//                             />
-//                         </a>
-//                     ))}
-//                 </div>
-//             </div>
-//         </section>
-//     );
-// };
-
 
 // =============================================================================
 // FOOTER COMPONENT
@@ -972,7 +939,7 @@ export default function App() {
 
     // --- State for Project Modal ---
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedProject, setSelectedProject] = useState(null);
+    const [selectedProject, setSelectedProject] = useState<Project | null>(null);
     
     // This is the main component.
     // In a real Next.js app, this logic would be part of `pages/index.js`
