@@ -882,7 +882,7 @@ const Footer = () => {
         <footer className="bg-charcoal border-t border-gray-700/50 py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-subtext">
                 <p className="text-sm">
-                    © {new Date().getFullYear()} Rajesh K. — Cyber Security Analyst | All Rights Reserved
+                    © {new Date().getFullYear()} Rajesh K. - Cyber Security Analyst | All Rights Reserved
                 </p>
             </div>
         </footer>
