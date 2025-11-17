@@ -8,7 +8,7 @@ It's a modern, responsive website built with **Next.js**, **Tailwind CSS**, and 
 
 **You can view the live site here:** [**https://raajeshkumar.tech**](https://raajeshkumar.tech)
 
-![Portfolio Website Preview](public/demo.png)
+<!-- ![Portfolio Website Preview](public/demo.png) -->
 
 ## ✨ Features
 
